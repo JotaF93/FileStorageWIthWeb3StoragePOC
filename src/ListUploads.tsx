@@ -1,6 +1,6 @@
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import { Upload } from 'web3.storage';
-import { listUploads, storeFiles } from './helper';
+import { listUploads } from './helper';
 
 function ListUploads({ contract, account }: any) {
 	const [loadedFiles, setLoadedFiles] = useState<Upload[]>([]);

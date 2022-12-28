@@ -1,4 +1,6 @@
 import { Web3Storage } from 'web3.storage';
+import * as Hash from 'typestub-ipfs-only-hash';
+const CIDTool = require('cid-tool');
 
 export function getAccessToken() {
 	// If you're just testing, you can paste in a token
@@ -48,26 +50,33 @@ export function download(url: string, filename: string) {
 		.catch(console.error);
 }
 
+export async function mint(contract: any, account: string, files: any) {
+	const cid = await generateCid(files);
+	console.log('cid generated with ipfs-only-hash', cid);
+
+	contract.methods
+		.mint(cid)
+		.send({ from: account })
+		.once('confirmation', () => {
+			storeFiles(files);
+		});
+}
+
 export async function storeFiles(files: any) {
 	// show the root cid as soon as it's ready
 	const onRootCidReady = (cid: string) => {
 		console.log('uploading files with cid:', cid);
 	};
 
-	// when each chunk is stored, update the percentage complete and display
-	const totalSize = files
-		.map((f: any) => f.size)
-		.reduce((a: number, b: number) => a + b, 0);
-	let uploaded = 0;
-
-	const onStoredChunk = (size: number) => {
-		uploaded += size;
-		const pct = 100 * (uploaded / totalSize);
-		console.log(`Uploading... ${pct.toFixed(2)}% complete`);
-	};
-
 	const client = makeStorageClient();
-	const cid = await client.put(files, { onRootCidReady, onStoredChunk });
+	const cid = await client.put(files, { onRootCidReady });
 	console.log('stored files with cid:', cid);
+	return cid;
+}
+
+export async function generateCid(files: any) {
+	const data = Buffer.from(files);
+	const hash = await Hash.of(data);
+	const cid = CIDTool.base32(hash);
 	return cid;
 }

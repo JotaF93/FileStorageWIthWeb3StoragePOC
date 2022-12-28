@@ -11,7 +11,6 @@ const App = () => {
 	const [contract, setContract] = useState(null);
 	const [totalSupply, setTotalSupply] = useState(0);
 	const [files, setFiles] = useState([{}]);
-	const [accountFiles, setAccountFiles] = useState<string[]>([]);
 
 	const loadWeb3 = async () => {
 		if (window.ethereum) {
@@ -54,20 +53,20 @@ const App = () => {
 		loadBlockchainData();
 	}, []);
 
-	const mint = (file: any, contract: any) => {
-		contract?.methods
-			.mint(file)
-			.send({ from: account })
-			.once('receipt', () => {
-				setFiles((files) => [...files, file]);
-			});
-	};
+	// const mint = (file: any, contract: any) => {
+	// 	contract?.methods
+	// 		.mint(file)
+	// 		.send({ from: account })
+	// 		.once('receipt', () => {
+	// 			setFiles((files) => [...files, file]);
+	// 		});
+	// };
 
 	return (
 		<div className='App'>
 			<header className='App-header'>
 				IPFS / web3.storage
-				<FileUploader mint={mint} contract={contract} />
+				<FileUploader contract={contract} account={account} />
 				<ListUploads files={files} contract={contract} account={account} />
 				<FileDownloader />
 			</header>

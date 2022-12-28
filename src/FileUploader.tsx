@@ -1,7 +1,6 @@
 import { ChangeEvent, useState } from 'react';
-import { storeFiles } from './helper';
-
-function FileUploader({ mint, contract }: any) {
+import { mint } from './helper';
+function FileUploader({ account, contract }: any) {
 	const [file, setFile] = useState<File[]>([]);
 
 	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -17,8 +16,8 @@ function FileUploader({ mint, contract }: any) {
 		// Take this as a POC. Do not follow this flow to store a file with a wallet in your project.
 		// This flow doesn't await the aproval of a wallet to store the file in IPFS.
 		// The files will be stored anyway but not asociated with an address account.
-		const cid = await storeFiles(file);
-		mint(cid, contract);
+
+		mint(contract, account, file);
 	};
 
 	return (
