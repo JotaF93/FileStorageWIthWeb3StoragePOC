@@ -13,10 +13,6 @@ function FileUploader({ account, contract }: any) {
 		if (!file) {
 			return;
 		}
-		// Take this as a POC. Do not follow this flow to store a file with a wallet in your project.
-		// This flow doesn't await the aproval of a wallet to store the file in IPFS.
-		// The files will be stored anyway but not asociated with an address account.
-
 		mint(contract, account, file);
 	};
 
